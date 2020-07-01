@@ -7,6 +7,3 @@ This repo contains:
 - **chat_words_str.txt**: 
 - **helper_functions.py**: 
 - **apple_tweets_nlp_slides.pdf**: 
-
-
-Note that additional rounds of feature extraction and modeling were completed after the presentation to improve score, so not all final features are reflected in the presentation.
