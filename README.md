@@ -1,2 +1,10 @@
 # apple_tweets_nlp
-NLP classification project to identify issues through customer tweets to Apple Support, and classify the product based on a user's initial tweet
+NLP on customer tweets to Apple Support to identify issues and predict the product group based on initiating tweets
+
+This repo contains:
+- **apple_tweets_preprocessing.ipynb**: data preprocessing
+- **apple_tweets_modeling.ipynb**: 
+- **chat_words_str.txt**: 
+- **helper_functions.py**: 
+- **data**: pickled files
+- **apple_tweets_nlp_slides.pdf**: pdf of project presentation slides
