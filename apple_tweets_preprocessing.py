@@ -6,8 +6,6 @@ This script is designed to be run in a Jupyter notebook or the command line,
 with mongodb pre-stored with the tweet dataset
 """
 
-### Apple Tweets Preprocessing
-
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -16,10 +14,10 @@ from collections import Counter
 from scipy import sparse
 import pickle
 import os
-from pymongo import MongoClient
-
 import re
 import string
+from pymongo import MongoClient
+
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.lancaster import LancasterStemmer
@@ -211,5 +209,3 @@ df_convo_user = df_convo_user[['author_id', 'text', 'text_clean', 'date_only_min
 
 # pickle dataframe for modeling
 df_convo_user.to_pickle('data/df_convo_user.pkl')
-
-
