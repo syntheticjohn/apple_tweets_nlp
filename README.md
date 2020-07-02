@@ -1,5 +1,5 @@
 # apple_tweets_nlp
-NLP on customer tweets to Apple Support to identify issues and predict the product group based on initiating tweets
+NLP on customer tweets to Apple Support to categorize issues and predict the product group based on initiating tweets
 
 This repo contains:
 - **apple_tweets_preprocessing.ipynb**: data preprocessing
