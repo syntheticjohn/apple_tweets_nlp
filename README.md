@@ -1,5 +1,5 @@
 # apple_tweets_nlp
-NLP on customer tweets to Apple Support to categorize issues and predict the product group based on initiating tweets
+Topic modeling on customer tweets to Apple Support to categorize issues (unsupervised learning) and predict the product group based on initiating tweets (semi-supervised learning)
 
 This repo includes:
 - **apple_tweets_preprocessing.py**: data preprocessing
