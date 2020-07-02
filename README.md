@@ -5,6 +5,6 @@ This repo contains:
 - **apple_tweets_preprocessing.ipynb**: data preprocessing
 - **apple_tweets_modeling.ipynb**: 
 - **chat_words_str.txt**: 
-- **data**: pickled files
 - **helper_functions.py**: 
+- **data**: pickled files
 - **apple_tweets_nlp_slides.pdf**: pdf of project presentation slides
