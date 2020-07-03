@@ -1,4 +1,4 @@
-# Text classification on Customer Tweets to Apple Support
+# Text Classification On Customer Tweets To Apple Support
 NLP on customer tweets sent to Apple Support to uncover topics over time using NMF (unsupervised topic modeling), and classify tweets as specific product groups based on users' initiating tweets using CorEx with anchors (semi-supervised topic modeling)
 
 This repo includes:
