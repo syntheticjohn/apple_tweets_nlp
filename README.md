@@ -1,6 +1,10 @@
 # apple_tweets_nlp
 NLP on customer tweets sent to Apple Support to classify tweet conversations using NMF (unsupervised topic modeling) and predict the product group based on users' initiating tweets using CorEx with anchors (semi-supervised topic modeling)
 
+Extract topics from customer tweets sent to Apple Support with NLP using NMF (unsupervised topic modeling), and classify conversations as a specific product group based on users' initial tweets using CorEx with anchors (semi-supervised topic modeling)
+
+NLP on customer tweets sent to Apple Support to uncover topics over time using NMF (unsupervised topic modeling), and classify tweets as specific product groups based on users' initiating tweets using CorEx with anchors (semi-supervised topic modeling)
+
 This repo includes:
 - **apple_tweets_preprocessing.py**: data preprocessing
 - **apple_tweets_modeling.ipynb**: topic modeling using NMF and CorEx
