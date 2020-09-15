@@ -6,27 +6,16 @@ This script is designed to be run in a Jupyter notebook or the command line,
 with mongodb pre-stored with the tweet dataset
 """
 
-import numpy as np
 import pandas as pd
 import datetime as dt
 import random
-from collections import Counter
-from scipy import sparse
 import pickle
-import os
 import re
 import string
 from pymongo import MongoClient
 
-from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem.lancaster import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
-from nltk.tag import pos_tag
-from nltk.chunk import ne_chunk
-from nltk.tokenize import MWETokenizer
-import spacy
-import gensim
 import emoji
 from spellchecker import SpellChecker
 from textblob import TextBlob
