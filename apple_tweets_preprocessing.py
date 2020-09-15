@@ -32,7 +32,10 @@ from spellchecker import SpellChecker
 from textblob import TextBlob
 from langdetect import detect
 
+#====================================================================
 ### Load tweet data from mongodb (where the tweet data has been stored)
+#====================================================================
+
 # set up client instance
 client = MongoClient()
 
@@ -56,8 +59,10 @@ df = df[(df.author_id == 'AppleSupport') | (df.text.str.contains('@applesupport'
 # remove outbound messages that are not from apple support 
 df = df[~((df.inbound == 'False') & (df.author_id != 'AppleSupport'))]
 
+#====================================================================
+### Cleaning the text
+#====================================================================
 
-### Cleaning
 # convert created at column to datetime type
 df['created_at'] = pd.to_datetime(df['created_at'], format='%a %b %d %H:%M:%S +0000 %Y')
 
@@ -66,6 +71,9 @@ df['date_only'] = df['created_at'].dt.normalize()
 
 # fix word lengthening, such as the word 'amazingggggg'
 def reduce_lengthening(text):
+    """
+    converts words with more than 3 consecutive letters into correct spelling form
+    """
     pattern = re.compile(r"(.)\1{2,}")
     return pattern.sub(r"\1\1", text)
 
@@ -106,6 +114,9 @@ for line in chat_words_str.split("\n"):
 chat_words_list = set(chat_words_list)
 
 def chat_words_conversion(text):
+    """
+    converts common chat acronyms into it's fully spelled out phrase  
+    """
     new_text = []
     for w in text.split():
         if w.upper() in chat_words_list:
@@ -115,6 +126,32 @@ def chat_words_conversion(text):
     return " ".join(new_text)
 df.text_clean = df.text_clean.apply(lambda x: chat_words_conversion(x))
 
+# correct spelling using spell checker
+spell = SpellChecker()
+def correct_spellings(text):
+    """ 
+    converts incorrectly spelled words into correct spelling 
+    """
+    corrected_text = []
+    misspelled_words = spell.unknown(text.split())
+    for word in text.split():
+        if word in misspelled_words:
+            corrected_text.append(spell.correction(word))
+        else:
+            corrected_text.append(word)
+    return " ".join(corrected_text)        
+df.text_clean = df.text_clean.apply(lambda x: correct_spellings(x))
+
+# identify and retain non-english tweets only using text blob
+def detect_lang(x):   
+    """
+    detects if text is of the english language
+    """
+    b = TextBlob(x)
+    return b.detect_language()   
+df['text_lang'] = df.text_clean.apply(lambda x: detect_lang(x))
+df = df[df.text_lang == 'eng']
+
 # remove stop words
 stop = stopwords.words('english')
 df.text_clean = df.text_clean.apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
@@ -122,11 +159,17 @@ df.text_clean = df.text_clean.apply(lambda x: ' '.join([word for word in x.split
 # lemmatize
 lemmatizer = WordNetLemmatizer()
 def lemmatize_words(text):
+    """ 
+    converts words into its lemmatized form 
+    """
     return " ".join([lemmatizer.lemmatize(word) for word in text.split()])
 df.text_clean = df.text_clean.apply(lambda text: lemmatize_words(text))
 
 # remove emoji 
 def give_emoji_free_text(text):
+    """ 
+    deletes emojis from text
+    """
     allchars = [str for str in text] 
     emoji_list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
     clean_text = ' '.join([str for str in text.split() if not any(i in str for i in emoji_list)]) 
@@ -135,34 +178,20 @@ df.text_clean = df.text_clean.apply(lambda x: give_emoji_free_text(x))
 
 # remove urls
 def remove_urls(text):
+    """ 
+    deletes url links from text
+    """
     url_pattern = re.compile(r'https?://\S+|www\.\S+')
     return url_pattern.sub(r'', text)
 df.text_clean = df.text_clean.apply(lambda x: remove_urls(x))
 
-# correct spelling using spell checker
-# spell = SpellChecker()
-# def correct_spellings(text):
-#     corrected_text = []
-#     misspelled_words = spell.unknown(text.split())
-#     for word in text.split():
-#         if word in misspelled_words:
-#             corrected_text.append(spell.correction(word))
-#         else:
-#             corrected_text.append(word)
-#     return " ".join(corrected_text)        
-# df.text_clean = df.text_clean.apply(lambda x: correct_spellings(x))
-
-# identify non-english tweets using text blob
-# def detect_lang(x):   
-#     b = TextBlob(x)
-#     return b.detect_language()   
-# df['text_lang'] = df.text_clean.apply(lambda x: detect_lang(x))
-# df = df[df.text_lang == 'eng']
-
 # pickle dataframe for modeling
 df.to_pickle('data/tweet_clean.pkl')
 
+#====================================================================
 ### Create a dataframe for user tweets to Apple Support only
+#====================================================================
+
 # create dataframe for tweets sent to Apple Support only, keeping each tweet as an individual document
 df_tweet_user = df.copy()
 df_tweet_user = df_tweet_user[df_tweet_user.inbound == 'True']
@@ -170,7 +199,10 @@ df_tweet_user = df_tweet_user[df_tweet_user.inbound == 'True']
 # pickle dataframe for modeling
 df_tweet_user.to_pickle('data/df_tweet_user.pkl')
 
+#====================================================================
 ### Create a dataframe for a user's initial tweet to Apple Support
+#====================================================================
+
 # create dataframe for a user's initial tweet to Apple Support (i.e., excluding replies)
 df_first_tweet_user = df.copy()
 df_first_tweet_user = df_first_tweet_user[df_first_tweet_user.inbound == 'True']
@@ -182,7 +214,10 @@ df_first_tweet_user = df_first_tweet_user.loc[df_first_tweet_user.groupby('autho
 # pickle dataframe for modeling
 df_first_tweet_user.to_pickle('data/df_first_tweet_user.pkl')
 
+#====================================================================
 ### Create a dataframe that combines user tweets from a conversation into one document
+#====================================================================
+
 # create new dataframe where all tweets from a user are combined (tweet conversation treated as a document)
 df_convo_user = df.copy()
 df_convo_user = df_convo_user[df_convo_user.inbound == 'True']
